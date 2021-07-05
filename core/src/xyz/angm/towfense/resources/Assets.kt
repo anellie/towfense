@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/5/21, 9:20 PM.
+ * This file was last modified at 7/6/21, 1:53 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -26,11 +26,13 @@ object Assets {
         loadDir<Texture>(file("textures"))
     }
 
+    fun tex(name: String): Texture = get("textures/$name.png")
+
     fun sound(name: String): Sound = get("sounds/$name.ogg")
 
     fun <T> get(file: String): T = assets.get(file)
 
-    private inline fun <reified T: Any> loadDir(dir: FileHandle) {
+    private inline fun <reified T : Any> loadDir(dir: FileHandle) {
         for (sub in dir.list()) {
             for (file in sub.list()) {
                 load<T>(file.path())

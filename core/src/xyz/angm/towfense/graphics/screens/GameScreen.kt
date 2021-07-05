@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 12/13/20, 9:17 PM.
+ * This file was last modified at 7/6/21, 1:53 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -9,15 +9,14 @@ package xyz.angm.towfense.graphics.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.PerformanceCounter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import xyz.angm.rox.Engine
 import xyz.angm.towfense.Towfense
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
+import xyz.angm.towfense.level.WorldMap
 import xyz.angm.towfense.runLogE
 
 /** The game screen. Active during gameplay.
@@ -28,9 +27,8 @@ import xyz.angm.towfense.runLogE
  * The only other responsibility of this class is putting together all graphics sources and drawing them.
  *
  * @property engine The ECS engine used */
-class GameScreen(private val game: Towfense) : ScreenAdapter(), Screen {
+class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMap.of(0)) : ScreenAdapter(), Screen {
 
-    private val coScope = CoroutineScope(Dispatchers.Default)
     val bench = PerformanceCounter("render")
 
     // Entities
@@ -56,6 +54,9 @@ class GameScreen(private val game: Towfense) : ScreenAdapter(), Screen {
     private fun renderInternal(delta: Float) {
         // Uncomment this and the stop call at the end to enable performance profiling.
         // startBench(delta)
+
+        Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
         engine.update(delta)
         stage.act()
@@ -95,6 +96,9 @@ class GameScreen(private val game: Towfense) : ScreenAdapter(), Screen {
     private fun initRender() {
         // 2D / Stage
         stage.addActor(uiPanels)
+
+        map.drawBackground()
+        stage.addActor(map)
     }
 
     override fun resize(width: Int, height: Int) {
@@ -105,7 +109,6 @@ class GameScreen(private val game: Towfense) : ScreenAdapter(), Screen {
     override fun hide() = dispose()
 
     override fun dispose() {
-        coScope.cancel()
         uiPanels.dispose()
     }
 }

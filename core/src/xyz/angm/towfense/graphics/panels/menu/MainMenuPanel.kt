@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/5/21, 9:30 PM.
+ * This file was last modified at 7/6/21, 12:36 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -36,7 +36,7 @@ class MainMenuPanel(screen: MenuScreen) : Panel(screen) {
 
             visTextButton(I18N["main.new-game"]) {
                 it.height(Skin.textButtonHeight).width(Skin.textButtonWidth).pad(20f).row()
-                onClick { }
+                onClick { screen.startNewGame() }
             }
             visTextButton(I18N["main.load-game"]) {
                 it.height(Skin.textButtonHeight).width(Skin.textButtonWidth).pad(20f).row()

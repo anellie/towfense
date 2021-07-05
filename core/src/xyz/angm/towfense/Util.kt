@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/5/21, 9:09 PM.
+ * This file was last modified at 7/6/21, 12:28 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -8,11 +8,8 @@
 package xyz.angm.towfense
 
 import ch.qos.logback.classic.Level
-import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.math.Vector2
 import com.charleskorn.kaml.Yaml
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.ticker
-import kotlinx.coroutines.launch
 import mu.KLogger
 import mu.KotlinLogging
 
@@ -36,32 +33,18 @@ fun String.convertToLong(): Long {
     return long
 }
 
-/** Schedules a closure to run at given intervals, using the provided scope.
- * Used as a replacement for java timers. */
-fun schedule(initial: Long, delay: Long, scope: CoroutineScope, run: () -> Unit) {
-    val ticker = ticker(delay, initial, scope.coroutineContext)
-    scope.launch {
-        while (true) {
-            ticker.receive()
-            run()
-        }
-    }
-}
-
-/** Axis indexing for vectors, used by some block renderers for dynamic oriented rendering. */
-operator fun Vector3.get(index: Int) =
+/** Axis indexing for vectors. */
+operator fun Vector2.get(index: Int) =
     when (index) {
         0 -> x
-        1 -> y
-        else -> z
+        else -> y
     }
 
-/** Axis indexing for vectors, used by some block renderers for dynamic oriented rendering. */
-operator fun Vector3.set(index: Int, v: Float) =
+/** Axis indexing for vectors. */
+operator fun Vector2.set(index: Int, v: Float) =
     when (index) {
         0 -> x = v
-        1 -> y = v
-        else -> z = v
+        else -> y = v
     }
 
 /** Run the given closure, catching and logging any exceptions that occur instead of

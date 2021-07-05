@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 12/13/20, 9:00 PM.
+ * This file was last modified at 7/6/21, 1:53 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -11,10 +11,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelBatch
-import com.badlogic.gdx.graphics.g3d.ModelInstance
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import xyz.angm.towfense.Towfense
 import xyz.angm.towfense.graphics.panels.Panel
@@ -22,8 +19,6 @@ import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.graphics.panels.menu.LoadingPanel
 import xyz.angm.towfense.graphics.panels.menu.MainMenuPanel
 import xyz.angm.towfense.resources.Assets
-import xyz.angm.towfense.resources.I18N
-import java.io.IOException
 
 private const val PANORAMA_SPEED = 2f
 
@@ -79,5 +74,9 @@ class MenuScreen(private val game: Towfense) : ScreenAdapter(), Screen {
     fun reload() {
         dispose()
         game.screen = MenuScreen(game)
+    }
+
+    fun startNewGame() {
+        game.screen = GameScreen(game)
     }
 }
