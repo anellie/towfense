@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 10:47 PM.
+ * This file was last modified at 7/7/21, 11:55 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -13,6 +13,7 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.PerformanceCounter
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import xyz.angm.rox.Engine
@@ -116,6 +117,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         add(TurretShootSystem())
         add(VelocitySystem())
         add(OOBRemoveSystem())
+        add(CollisionSystem())
 
         val display = DisplaySystem(gameStage)
         add(display as EntityListener)
@@ -133,7 +135,14 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         Gdx.input.setCursorPosition(uiStage.viewport.screenWidth / 2, (uiStage.viewport.screenY + uiStage.viewport.screenHeight) / 2)
 
         // test enemy
-        createEnemy(engine)
+        gameStage.addAction(
+            Actions.repeat(
+                -1, Actions.sequence(
+                    Actions.run { createEnemy(engine) },
+                    Actions.delay(0.5f)
+                )
+            )
+        )
     }
 
     // Initialize all rendering components

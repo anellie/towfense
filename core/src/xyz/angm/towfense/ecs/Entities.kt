@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 8:09 PM.
+ * This file was last modified at 7/7/21, 11:40 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -20,8 +20,8 @@ import xyz.angm.towfense.resources.Assets
 fun createEnemy(engine: Engine) = engine.entity {
     with<PositionComponent>()
     with<PathedComponent>()
-    with<DisplayComponent> { actor = Enemy() }
-    with<EnemyComponent>()
+    val enemy = with<EnemyComponent>()
+    with<DisplayComponent> { actor = Enemy(enemy) }
 }
 
 fun createTurret(engine: Engine, pos: Vector2, kind: TurretKind) = engine.entity {
@@ -42,4 +42,5 @@ fun createBullet(engine: Engine, pos: Vector2, vel: Vector2) = engine.entity {
         actor.setOrigin(Align.center)
         actor.rotation = vel.angleDeg() + 90f
     }
+    with<BulletComponent>()
 }

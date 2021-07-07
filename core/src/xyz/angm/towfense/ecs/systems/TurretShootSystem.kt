@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 11:01 PM.
+ * This file was last modified at 7/7/21, 11:41 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -19,7 +19,7 @@ import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.turret
 import xyz.angm.towfense.level.Shooting
 
-private const val BULLET_SPEED = 10f
+private const val BULLET_SPEED = 30f
 
 class TurretShootSystem : IteratingSystem(Family.allOf(TurretComponent::class)) {
 
