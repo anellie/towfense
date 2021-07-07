@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 2:07 AM.
+ * This file was last modified at 7/7/21, 2:44 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -12,8 +12,14 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.PerformanceCounter
+import com.badlogic.gdx.utils.viewport.FitViewport
 import xyz.angm.rox.Engine
+import xyz.angm.rox.EntityListener
+import xyz.angm.rox.systems.EntitySystem
 import xyz.angm.towfense.Towfense
+import xyz.angm.towfense.ecs.createEnemy
+import xyz.angm.towfense.ecs.position
+import xyz.angm.towfense.ecs.systems.DisplaySystem
 import xyz.angm.towfense.ecs.systems.PathMovementSystem
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
@@ -30,14 +36,15 @@ import xyz.angm.towfense.runLogE
  * @property engine The ECS engine used */
 class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMap.of(0)) : ScreenAdapter(), Screen {
 
-    val bench = PerformanceCounter("render")
+    private val bench = PerformanceCounter("render")
 
     // Entities
-    val engine = Engine()
+    private val engine = Engine()
 
     // 2D Graphics
-    private val stage = Stage(viewport)
+    private val uiStage = Stage(viewport)
     private val uiPanels = PanelStack()
+    private val gameStage = Stage(FitViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
 
     val entitiesLoaded get() = engine.entities.size
     val systemsActive get() = engine.systems.size
@@ -60,8 +67,12 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
         engine.update(delta)
-        stage.act()
-        stage.draw()
+
+        gameStage.act(delta)
+        gameStage.draw()
+
+        uiStage.act(delta)
+        uiStage.draw()
 
         // bench.stop()
     }
@@ -82,28 +93,38 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
 
     // Initialize all ECS systems
     private fun initSystems() = engine.apply {
+        position // initialize globals...
+
         add(PathMovementSystem(map.path))
+
+        val display = DisplaySystem(gameStage)
+        add(display as EntityListener)
+        add(display as EntitySystem)
     }
 
     // Initialize everything not render-related
     private fun initState() {
         // Input
-        Gdx.input.inputProcessor = stage
+        Gdx.input.inputProcessor = uiStage
         Gdx.input.isCursorCatched = false
-        Gdx.input.setCursorPosition(stage.viewport.screenWidth / 2, (stage.viewport.screenY + stage.viewport.screenHeight) / 2)
+        Gdx.input.setCursorPosition(uiStage.viewport.screenWidth / 2, (uiStage.viewport.screenY + uiStage.viewport.screenHeight) / 2)
+
+        // test enemy
+        createEnemy(engine)
     }
 
     // Initialize all rendering components
     private fun initRender() {
         // 2D / Stage
-        stage.addActor(uiPanels)
+        uiStage.addActor(uiPanels)
 
         map.drawBackground()
-        stage.addActor(map)
+        gameStage.addActor(map)
     }
 
     override fun resize(width: Int, height: Int) {
-        stage.viewport.update(width, height, true)
+        uiStage.viewport.update(width, height, true)
+        gameStage.viewport.update(width, height, true)
     }
 
     /** hide is called when the screen is no longer active, at which point this type of screen becomes dereferenced and needs to be disposed. */
