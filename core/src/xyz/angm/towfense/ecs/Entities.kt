@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 3:34 AM.
+ * This file was last modified at 7/7/21, 3:50 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -34,5 +34,16 @@ fun createTurret(engine: Engine, pos: Vector2) = engine.entity {
     with<DisplayComponent> {
         actor = Turret(pos, turret)
         actor.setSize(1f, 1f)
+    }
+}
+
+fun createBullet(engine: Engine, pos: Vector2, vel: Vector2) = engine.entity {
+    with<PositionComponent> { set(pos).add(0.5f, 0.5f) }
+    with<VelocityComponent> { set(vel) }
+    with<DisplayComponent> {
+        actor = Image(Assets.tex("entity/bullet"))
+        actor.setSize(0.1f, 0.2f)
+        actor.setOrigin(Align.center)
+        actor.rotation = vel.angleDeg() + 90f
     }
 }
