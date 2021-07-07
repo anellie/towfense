@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 10:45 PM.
+ * This file was last modified at 7/8/21, 12:00 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -38,5 +38,7 @@ class TurretSelectWindow(screen: GameScreen) : Window("Turrets", false) {
             group.add(btn)
             add(btn).pad(3f)
         }
+
+        setPosition(999999f, 0f)
     }
 }
