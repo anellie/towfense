@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/6/21, 1:53 AM.
+ * This file was last modified at 7/7/21, 2:07 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.PerformanceCounter
 import xyz.angm.rox.Engine
 import xyz.angm.towfense.Towfense
+import xyz.angm.towfense.ecs.systems.PathMovementSystem
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.level.WorldMap
@@ -81,7 +82,7 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
 
     // Initialize all ECS systems
     private fun initSystems() = engine.apply {
-        val screen = this@GameScreen
+        add(PathMovementSystem(map.path))
     }
 
     // Initialize everything not render-related
