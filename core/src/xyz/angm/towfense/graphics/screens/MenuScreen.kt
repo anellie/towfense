@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:11 AM.
+ * This file was last modified at 7/8/21, 12:33 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -12,6 +12,7 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 import xyz.angm.towfense.Towfense
+import xyz.angm.towfense.editor.EditorScreen
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.graphics.panels.menu.LoadingPanel
@@ -69,5 +70,9 @@ class MenuScreen(private val game: Towfense) : ScreenAdapter(), Screen {
 
     fun startNewGame() {
         game.screen = GameScreen(game)
+    }
+
+    fun editor() {
+        game.screen = EditorScreen()
     }
 }

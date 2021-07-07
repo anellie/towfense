@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 2:05 AM.
+ * This file was last modified at 7/8/21, 1:44 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import ktx.assets.file
+import ktx.assets.toLocalFile
 import xyz.angm.towfense.IntVector
 import xyz.angm.towfense.yaml
 
@@ -21,7 +22,7 @@ const val LEN = 1
 class Path {
     val start = IntVector()
     val segments = ArrayList<IntArray>()
-    val mapSize = IntVector()
+    val mapSize = IntVector(32, 32)
 }
 
 enum class Direction {
@@ -55,5 +56,17 @@ enum class Direction {
 
 object Levels {
     private val levels = yaml.decodeFromString(ListSerializer(Path.serializer()), file("levels.yaml").readString())
+    val size get() = levels.size
+
     operator fun get(index: Int) = levels[index]
+
+    fun save() {
+        val out = yaml.encodeToString(ListSerializer(Path.serializer()), levels)
+        "levels.yaml".toLocalFile().writeString(out, false)
+    }
+
+    fun new(): Int {
+        (levels as MutableList).add(Path())
+        return levels.size - 1
+    }
 }
