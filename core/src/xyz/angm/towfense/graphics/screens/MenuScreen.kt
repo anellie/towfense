@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/6/21, 1:53 AM.
+ * This file was last modified at 7/8/21, 12:11 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -10,8 +10,6 @@ package xyz.angm.towfense.graphics.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import xyz.angm.towfense.Towfense
 import xyz.angm.towfense.graphics.panels.Panel
@@ -20,18 +18,12 @@ import xyz.angm.towfense.graphics.panels.menu.LoadingPanel
 import xyz.angm.towfense.graphics.panels.menu.MainMenuPanel
 import xyz.angm.towfense.resources.Assets
 
-private const val PANORAMA_SPEED = 2f
-
 /** The menu screen. It manages the current menu panel stack and draws it on top of a nice background.
  * @param game The game instance. */
 class MenuScreen(private val game: Towfense) : ScreenAdapter(), Screen {
 
-
     private val stage = Stage(viewport)
     private var panelStack = PanelStack()
-
-    private var modelBatch = ModelBatch()
-    private val cam = PerspectiveCamera(75f, worldWidth, worldHeight)
 
     override fun show() {
         stage.addActor(panelStack)
@@ -66,7 +58,6 @@ class MenuScreen(private val game: Towfense) : ScreenAdapter(), Screen {
 
     override fun dispose() {
         stage.dispose()
-        modelBatch.dispose()
         panelStack.dispose()
     }
 

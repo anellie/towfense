@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 10:52 PM.
+ * This file was last modified at 7/8/21, 12:09 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -10,10 +10,23 @@ package xyz.angm.towfense.actions
 import com.badlogic.gdx.InputAdapter
 import xyz.angm.towfense.graphics.screens.GameScreen
 import xyz.angm.towfense.level.TurretKind
+import xyz.angm.towfense.resources.configuration
 
 class InputHandler(private val screen: GameScreen) : InputAdapter() {
 
     var currentKind: TurretKind? = null
+
+    override fun keyDown(keycode: Int): Boolean {
+        val bind = configuration.keybinds[keycode] ?: return false
+        bind.keyDown(screen)
+        return true
+    }
+
+    override fun keyUp(keycode: Int): Boolean {
+        val bind = configuration.keybinds[keycode] ?: return false
+        bind.keyUp(screen)
+        return true
+    }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         screen.placeTurret(screenX, screenY, currentKind ?: return false)

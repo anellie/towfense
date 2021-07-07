@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 11:55 PM.
+ * This file was last modified at 7/8/21, 12:03 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -164,5 +164,9 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
     override fun dispose() {
         uiPanels.dispose()
+    }
+
+    fun returnToMainMenu() {
+        game.screen = MenuScreen(game)
     }
 }

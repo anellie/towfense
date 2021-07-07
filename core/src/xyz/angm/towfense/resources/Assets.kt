@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 10:28 PM.
+ * This file was last modified at 7/8/21, 12:10 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -18,6 +18,8 @@ object Assets {
     private val assets = AssetManager()
 
     fun init() {
+        if (assets.loadedAssets > 0) return // already initialized
+
         load<Texture>("textures/ui/logo.png")
         assets.finishLoading() // Assets queued are initial assets, load immediately
         Skin.reload()
