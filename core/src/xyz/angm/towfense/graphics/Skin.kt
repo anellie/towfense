@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 7:06 PM.
+ * This file was last modified at 7/7/21, 11:37 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.kotcrab.vis.ui.VisUI
 import com.kotcrab.vis.ui.widget.VisTextButton
 import ktx.assets.disposeSafely
@@ -55,7 +54,7 @@ object Skin {
 
         VisUI.getSkin().disposeSafely()
         VisUI.dispose(false)
-        VisUI.load()
+        VisUI.load(file("skin/tinted.json"))
         val it = VisUI.getSkin()
         Scene2DSkin.defaultSkin = VisUI.getSkin().apply {
             fontSizes.forEach { size ->
@@ -68,7 +67,6 @@ object Skin {
 
                 add("default-${size}pt", regular)
             }
-            add("default", get<BitmapFont>("default-16pt"))
 
             colors5.forEach { color ->
                 val pixmap = Pixmap(5, 5, Pixmap.Format.RGBA8888)
@@ -89,8 +87,6 @@ object Skin {
             visTextButton {
                 font = it["default-32pt"]
             }
-
-            add("vis-default", get<Label.LabelStyle>())
 
             getAll(BitmapFont::class.java).forEach { skinFont ->
                 label(skinFont.key) { font = skinFont.value }
