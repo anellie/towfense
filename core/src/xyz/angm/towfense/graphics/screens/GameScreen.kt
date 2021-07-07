@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 2:44 AM.
+ * This file was last modified at 7/7/21, 3:19 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -8,16 +8,20 @@
 package xyz.angm.towfense.graphics.screens
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.PerformanceCounter
-import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.ExtendViewport
 import xyz.angm.rox.Engine
 import xyz.angm.rox.EntityListener
 import xyz.angm.rox.systems.EntitySystem
 import xyz.angm.towfense.Towfense
+import xyz.angm.towfense.actions.InputHandler
 import xyz.angm.towfense.ecs.createEnemy
+import xyz.angm.towfense.ecs.createTurret
 import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.systems.DisplaySystem
 import xyz.angm.towfense.ecs.systems.PathMovementSystem
@@ -34,9 +38,10 @@ import xyz.angm.towfense.runLogE
  * The only other responsibility of this class is putting together all graphics sources and drawing them.
  *
  * @property engine The ECS engine used */
-class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMap.of(0)) : ScreenAdapter(), Screen {
+class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0)) : ScreenAdapter(), Screen {
 
     private val bench = PerformanceCounter("render")
+    private val tmpV = Vector2()
 
     // Entities
     private val engine = Engine()
@@ -44,7 +49,7 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
     // 2D Graphics
     private val uiStage = Stage(viewport)
     private val uiPanels = PanelStack()
-    private val gameStage = Stage(FitViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
+    private val gameStage = Stage(ExtendViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
 
     val entitiesLoaded get() = engine.entities.size
     val systemsActive get() = engine.systems.size
@@ -91,6 +96,13 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
         uiPanels.popPanel()
     }
 
+    fun placeTurret(x: Int, y: Int) {
+        tmpV.set(x.toFloat(), y.toFloat())
+        gameStage.screenToStageCoordinates(tmpV)
+        tmpV.sub(0.5f, 0.5f)
+        createTurret(engine, tmpV)
+    }
+
     // Initialize all ECS systems
     private fun initSystems() = engine.apply {
         position // initialize globals...
@@ -105,7 +117,10 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
     // Initialize everything not render-related
     private fun initState() {
         // Input
-        Gdx.input.inputProcessor = uiStage
+        val inputMultiplexer = InputMultiplexer()
+        inputMultiplexer.addProcessor(uiStage)
+        inputMultiplexer.addProcessor(InputHandler(this))
+        Gdx.input.inputProcessor = inputMultiplexer
         Gdx.input.isCursorCatched = false
         Gdx.input.setCursorPosition(uiStage.viewport.screenWidth / 2, (uiStage.viewport.screenY + uiStage.viewport.screenHeight) / 2)
 
@@ -115,10 +130,7 @@ class GameScreen(private val game: Towfense, private val map: WorldMap = WorldMa
 
     // Initialize all rendering components
     private fun initRender() {
-        // 2D / Stage
         uiStage.addActor(uiPanels)
-
-        map.drawBackground()
         gameStage.addActor(map)
     }
 

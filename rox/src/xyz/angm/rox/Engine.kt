@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 10/1/20, 9:50 PM.
+ * This file was last modified at 7/7/21, 3:14 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -154,9 +154,10 @@ class Engine {
         /** Add a component of the given class to the entity.
          * Class must have an empty constructor for this method to work.
          * Can add a code block to initialize the component. */
-        inline fun <reified T : Component> with(init: T.() -> Unit = {}) {
+        inline fun <reified T : Component> with(init: T.() -> Unit = {}): T {
             val component = T::class.createInstance()
             add(component, init)
+            return component
         }
 
         /** Add the given specific component to the entity.

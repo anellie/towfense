@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 2:45 AM.
+ * This file was last modified at 7/7/21, 3:19 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -20,10 +20,11 @@ import xyz.angm.towfense.resources.Assets
 
 class WorldMap private constructor(val path: Path) : Group() {
 
-    fun drawBackground() {
-        val pathImage = Assets.tex("map/path")
-        val region = TextureRegion(pathImage)
+    private val tmpV = Vector2()
+    private val preview = PlacementPreview()
 
+    init {
+        val pathImage = Assets.tex("map/path")
         val location = path.start.cpy()
         var delay = 0.1f
         for (s in path.segments) {
@@ -33,6 +34,14 @@ class WorldMap private constructor(val path: Path) : Group() {
                 delay += 0.1f
             }
         }
+
+        addActor(preview)
+    }
+
+    fun updatePlacementPreview(x: Int, y: Int) {
+        tmpV.set(x.toFloat(), y.toFloat())
+        stage.screenToStageCoordinates(tmpV)
+        preview.update(tmpV)
     }
 
     private fun plotPoint(tex: Texture, loc: IntVector, dir: Int, delay: Float) {
@@ -60,10 +69,4 @@ class WorldMap private constructor(val path: Path) : Group() {
     companion object {
         fun of(i: Int) = WorldMap(Levels[i])
     }
-}
-
-fun Vector2.div(x: Float, y: Float): Vector2 {
-    this.x /= x
-    this.y /= y
-    return this
 }
