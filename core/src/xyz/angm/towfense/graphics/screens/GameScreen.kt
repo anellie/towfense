@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 3:44 AM.
+ * This file was last modified at 7/7/21, 7:14 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -26,6 +26,7 @@ import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.systems.*
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
+import xyz.angm.towfense.graphics.window.DebugWindow
 import xyz.angm.towfense.level.WorldMap
 import xyz.angm.towfense.runLogE
 
@@ -110,6 +111,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         add(TurretTargetSystem())
         add(TurretShootSystem())
         add(VelocitySystem())
+        add(OOBRemoveSystem())
 
         val display = DisplaySystem(gameStage)
         add(display as EntityListener)
@@ -133,6 +135,8 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     // Initialize all rendering components
     private fun initRender() {
         uiStage.addActor(uiPanels)
+        uiStage.addActor(DebugWindow(this))
+
         gameStage.addActor(map)
     }
 

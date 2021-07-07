@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/5/21, 11:48 PM.
+ * This file was last modified at 7/7/21, 7:06 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -68,7 +68,7 @@ object Skin {
 
                 add("default-${size}pt", regular)
             }
-            add("default", get<BitmapFont>("default-32pt"))
+            add("default", get<BitmapFont>("default-16pt"))
 
             colors5.forEach { color ->
                 val pixmap = Pixmap(5, 5, Pixmap.Format.RGBA8888)
