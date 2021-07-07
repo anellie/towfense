@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 3:12 AM.
+ * This file was last modified at 7/7/21, 3:20 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -17,3 +17,4 @@ val display = mapperFor<DisplayComponent>()
 val pathed = mapperFor<PathedComponent>()
 
 val turret = mapperFor<TurretComponent>()
+val enemy = mapperFor<EnemyComponent>()
