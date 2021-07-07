@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 3:19 AM.
+ * This file was last modified at 7/7/21, 8:11 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -38,10 +38,15 @@ class WorldMap private constructor(val path: Path) : Group() {
         addActor(preview)
     }
 
-    fun updatePlacementPreview(x: Int, y: Int) {
-        tmpV.set(x.toFloat(), y.toFloat())
-        stage.screenToStageCoordinates(tmpV)
-        preview.update(tmpV)
+    fun updatePlacementPreview(x: Int, y: Int, kind: TurretKind?) {
+        if (kind != null) {
+            tmpV.set(x.toFloat(), y.toFloat())
+            stage.screenToStageCoordinates(tmpV)
+            preview.update(tmpV, kind)
+            preview.isVisible = true
+        } else {
+            preview.isVisible = false
+        }
     }
 
     private fun plotPoint(tex: Texture, loc: IntVector, dir: Int, delay: Float) {

@@ -1,0 +1,18 @@
+- name: turret
+  aiming: SingleEnemy
+  shots: SingleShot
+  interval: 0.5
+  range: 6.0
+
+- name: sentry
+  aiming: Fixed
+  shots: SingleShot
+  interval: 0.2
+  range: 3.0
+
+- name: boomer
+  aiming: None
+  shots: Allround
+  shotCount: 10
+  interval: 1.5
+  range: 8.0

@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 7:17 PM.
+ * This file was last modified at 7/7/21, 10:40 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -18,7 +18,7 @@ class OOBRemoveSystem : IntervalIteratingSystem(0.5f, Family.allOf(PositionCompo
 
     override fun process(entity: Entity) {
         val pos = entity[position]
-        if (pos.x <= -200f || pos.x >= 1000f || pos.y <= -200f || pos.y >= 1000f) {
+        if (pos.x <= -10f || pos.x >= 200f || pos.y <= -10f || pos.y >= 200f) {
             entity.c(display)?.actor?.remove()
             engine.remove(entity)
         }

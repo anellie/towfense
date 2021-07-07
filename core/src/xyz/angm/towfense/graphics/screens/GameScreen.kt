@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 7:14 PM.
+ * This file was last modified at 7/7/21, 10:47 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -27,6 +27,8 @@ import xyz.angm.towfense.ecs.systems.*
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.graphics.window.DebugWindow
+import xyz.angm.towfense.graphics.window.TurretSelectWindow
+import xyz.angm.towfense.level.TurretKind
 import xyz.angm.towfense.level.WorldMap
 import xyz.angm.towfense.runLogE
 
@@ -50,6 +52,8 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     private val uiStage = Stage(viewport)
     private val uiPanels = PanelStack()
     private val gameStage = Stage(ExtendViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
+
+    val inputHandler = InputHandler(this)
 
     val entitiesLoaded get() = engine.entities.size
     val systemsActive get() = engine.systems.size
@@ -96,11 +100,11 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         uiPanels.popPanel()
     }
 
-    fun placeTurret(x: Int, y: Int) {
+    fun placeTurret(x: Int, y: Int, kind: TurretKind) {
         tmpV.set(x.toFloat(), y.toFloat())
         gameStage.screenToStageCoordinates(tmpV)
         tmpV.sub(0.5f, 0.5f)
-        createTurret(engine, tmpV)
+        createTurret(engine, tmpV, kind)
     }
 
     // Initialize all ECS systems
@@ -123,7 +127,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         // Input
         val inputMultiplexer = InputMultiplexer()
         inputMultiplexer.addProcessor(uiStage)
-        inputMultiplexer.addProcessor(InputHandler(this))
+        inputMultiplexer.addProcessor(inputHandler)
         Gdx.input.inputProcessor = inputMultiplexer
         Gdx.input.isCursorCatched = false
         Gdx.input.setCursorPosition(uiStage.viewport.screenWidth / 2, (uiStage.viewport.screenY + uiStage.viewport.screenHeight) / 2)
@@ -136,6 +140,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     private fun initRender() {
         uiStage.addActor(uiPanels)
         uiStage.addActor(DebugWindow(this))
+        uiStage.addActor(TurretSelectWindow(this))
 
         gameStage.addActor(map)
     }

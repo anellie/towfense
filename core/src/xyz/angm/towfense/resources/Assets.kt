@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/6/21, 1:53 AM.
+ * This file was last modified at 7/7/21, 10:28 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -24,6 +24,7 @@ object Assets {
 
         loadDir<Sound>(file("sounds"))
         loadDir<Texture>(file("textures"))
+        loadDir<Texture>(file("textures/entity"))
     }
 
     fun tex(name: String): Texture = get("textures/$name.png")
@@ -34,7 +35,7 @@ object Assets {
 
     private inline fun <reified T : Any> loadDir(dir: FileHandle) {
         for (sub in dir.list()) {
-            for (file in sub.list()) {
+            for (file in sub.list().filter { !it.isDirectory }) {
                 load<T>(file.path())
             }
         }
