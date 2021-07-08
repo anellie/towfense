@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:03 AM.
+ * This file was last modified at 7/9/21, 12:46 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -27,6 +27,7 @@ import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.systems.*
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
+import xyz.angm.towfense.graphics.window.ControlsWindow
 import xyz.angm.towfense.graphics.window.DebugWindow
 import xyz.angm.towfense.graphics.window.TurretSelectWindow
 import xyz.angm.towfense.level.TurretKind
@@ -53,8 +54,12 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     private val uiStage = Stage(viewport)
     private val uiPanels = PanelStack()
     private val gameStage = Stage(ExtendViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
-
     val inputHandler = InputHandler(this)
+
+    // Player state
+    var coins = 200
+    var lives = 3
+    var gameSpeed = 1f
 
     val entitiesLoaded get() = engine.entities.size
     val systemsActive get() = engine.systems.size
@@ -76,7 +81,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
-        engine.update(delta)
+        engine.update(delta * gameSpeed)
 
         gameStage.act(delta)
         gameStage.draw()
@@ -150,6 +155,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         uiStage.addActor(uiPanels)
         uiStage.addActor(DebugWindow(this))
         uiStage.addActor(TurretSelectWindow(this))
+        uiStage.addActor(ControlsWindow(this))
 
         gameStage.addActor(map)
     }

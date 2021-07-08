@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:00 AM.
+ * This file was last modified at 7/9/21, 12:48 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -18,7 +18,7 @@ import xyz.angm.towfense.graphics.click
 import xyz.angm.towfense.graphics.screens.GameScreen
 import xyz.angm.towfense.level.TurretKind
 
-class TurretSelectWindow(screen: GameScreen) : Window("Turrets", false) {
+class TurretSelectWindow(screen: GameScreen) : Window("window.turret-select", false) {
 
     init {
         val group = ButtonGroup<Button>()

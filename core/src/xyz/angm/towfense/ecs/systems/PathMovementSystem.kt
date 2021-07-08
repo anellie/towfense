@@ -1,12 +1,14 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 2:42 AM.
+ * This file was last modified at 7/9/21, 12:53 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
 
 package xyz.angm.towfense.ecs.systems
 
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import xyz.angm.rox.Entity
 import xyz.angm.rox.Family
 import xyz.angm.rox.systems.IteratingSystem
@@ -33,9 +35,15 @@ class PathMovementSystem(private val path: Path) : IteratingSystem(Family.allOf(
         Direction.add(posC, segment[DIR], delta * SPEED)
 
         if (pathC.distTravelled >= (segment[LEN] + 1)) {
+            posC.round()
             pathC.segment++
             pathC.segment = min(path.segments.size - 1, pathC.segment)
             pathC.distTravelled = 0f
         }
     }
+}
+
+private fun Vector2.round() {
+    x = MathUtils.round(x).toFloat()
+    y = MathUtils.round(y).toFloat()
 }
