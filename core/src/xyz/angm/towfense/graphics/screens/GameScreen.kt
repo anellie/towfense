@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 12:46 AM.
+ * This file was last modified at 7/9/21, 1:04 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -24,6 +24,7 @@ import xyz.angm.towfense.actions.InputHandler
 import xyz.angm.towfense.ecs.createEnemy
 import xyz.angm.towfense.ecs.createTurret
 import xyz.angm.towfense.ecs.position
+import xyz.angm.towfense.ecs.removeEntity
 import xyz.angm.towfense.ecs.systems.*
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
@@ -117,12 +118,19 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     private fun initSystems() = engine.apply {
         position // initialize globals...
 
-        add(PathMovementSystem(map.path))
         add(TurretTargetSystem())
         add(TurretShootSystem())
         add(VelocitySystem())
         add(OOBRemoveSystem())
-        add(CollisionSystem())
+
+        add(PathMovementSystem(map.path) { entity ->
+            removeEntity(entity)
+            lives--
+        })
+        add(CollisionSystem { entity ->
+            removeEntity(entity)
+            coins += 5
+        })
 
         val display = DisplaySystem(gameStage)
         add(display as EntityListener)

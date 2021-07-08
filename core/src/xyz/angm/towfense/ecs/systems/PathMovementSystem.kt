@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 12:53 AM.
+ * This file was last modified at 7/9/21, 1:15 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -20,11 +20,15 @@ import xyz.angm.towfense.level.DIR
 import xyz.angm.towfense.level.Direction
 import xyz.angm.towfense.level.LEN
 import xyz.angm.towfense.level.Path
-import java.lang.Integer.min
 
 private const val SPEED = 3f
 
-class PathMovementSystem(private val path: Path) : IteratingSystem(Family.allOf(PathedComponent::class, PositionComponent::class)) {
+class PathMovementSystem(private val path: Path, private val endReached: (Entity) -> Unit) : IteratingSystem(
+    Family.allOf(
+        PathedComponent::class,
+        PositionComponent::class
+    )
+) {
 
     override fun process(entity: Entity, delta: Float) {
         val posC = entity[position]
@@ -37,8 +41,12 @@ class PathMovementSystem(private val path: Path) : IteratingSystem(Family.allOf(
         if (pathC.distTravelled >= (segment[LEN] + 1)) {
             posC.round()
             pathC.segment++
-            pathC.segment = min(path.segments.size - 1, pathC.segment)
             pathC.distTravelled = 0f
+
+            if (path.segments.size == pathC.segment) {
+                endReached(entity)
+                pathC.segment--
+            }
         }
     }
 }

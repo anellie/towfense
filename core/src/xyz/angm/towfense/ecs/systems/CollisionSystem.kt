@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 11:44 PM.
+ * This file was last modified at 7/9/21, 1:15 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -12,11 +12,11 @@ import xyz.angm.rox.Family
 import xyz.angm.rox.systems.IteratingSystem
 import xyz.angm.towfense.ecs.components.BulletComponent
 import xyz.angm.towfense.ecs.components.EnemyComponent
-import xyz.angm.towfense.ecs.display
 import xyz.angm.towfense.ecs.enemy
 import xyz.angm.towfense.ecs.position
+import xyz.angm.towfense.ecs.removeEntity
 
-class CollisionSystem : IteratingSystem(Family.allOf(EnemyComponent::class)) {
+class CollisionSystem(private val enemyKilled: (Entity) -> Unit) : IteratingSystem(Family.allOf(EnemyComponent::class)) {
 
     private val bullets = Family.allOf(BulletComponent::class)
 
@@ -27,15 +27,11 @@ class CollisionSystem : IteratingSystem(Family.allOf(EnemyComponent::class)) {
         for (bullet in engine[bullets]) {
             val bPos = bullet[position]
             if (bPos.x.toInt() == pos.x.toInt() && bPos.y.toInt() == pos.y.toInt()) {
-                bullet.c(display)?.actor?.remove()
-                engine.remove(bullet)
+                engine.removeEntity(bullet)
                 enemy.health--
             }
         }
 
-        if (enemy.health <= 0) {
-            entity.c(display)?.actor?.remove()
-            engine.remove(entity)
-        }
+        if (enemy.health <= 0) enemyKilled(entity)
     }
 }

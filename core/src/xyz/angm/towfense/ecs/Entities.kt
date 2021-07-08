@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 11:40 PM.
+ * This file was last modified at 7/9/21, 1:03 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import xyz.angm.rox.Engine
+import xyz.angm.rox.Entity
 import xyz.angm.towfense.ecs.components.*
 import xyz.angm.towfense.graphics.actors.Enemy
 import xyz.angm.towfense.graphics.actors.Turret
@@ -43,4 +44,9 @@ fun createBullet(engine: Engine, pos: Vector2, vel: Vector2) = engine.entity {
         actor.rotation = vel.angleDeg() + 90f
     }
     with<BulletComponent>()
+}
+
+fun Engine.removeEntity(entity: Entity) {
+    entity.c(display)?.actor?.remove()
+    remove(entity)
 }
