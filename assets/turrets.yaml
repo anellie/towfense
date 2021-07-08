@@ -1,16 +1,19 @@
-- name: turret
+- identifier: turret
+  cost: 100
   aiming: SingleEnemy
   shots: SingleShot
   interval: 0.5
   range: 6.0
 
-- name: sentry
+- identifier: sentry
+  cost: 350
   aiming: Fixed
   shots: SingleShot
   interval: 0.2
   range: 3.0
 
-- name: boomer
+- identifier: boomer
+  cost: 690
   aiming: None
   shots: Allround
   shotCount: 10
