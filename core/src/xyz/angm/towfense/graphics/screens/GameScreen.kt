@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:04 AM.
+ * This file was last modified at 7/9/21, 1:22 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -28,6 +28,7 @@ import xyz.angm.towfense.ecs.removeEntity
 import xyz.angm.towfense.ecs.systems.*
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
+import xyz.angm.towfense.graphics.panels.game.GameLostPanel
 import xyz.angm.towfense.graphics.window.ControlsWindow
 import xyz.angm.towfense.graphics.window.DebugWindow
 import xyz.angm.towfense.graphics.window.TurretSelectWindow
@@ -126,6 +127,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         add(PathMovementSystem(map.path) { entity ->
             removeEntity(entity)
             lives--
+            if (lives == 0) playerLost()
         })
         add(CollisionSystem { entity ->
             removeEntity(entity)
@@ -182,5 +184,12 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
     fun returnToMainMenu() {
         game.screen = MenuScreen(game)
+    }
+
+    private fun playerLost() {
+        gameSpeed = 0f
+        Gdx.input.inputProcessor = uiStage
+        while (uiPanels.panelsInStack > 0) popPanel()
+        pushPanel(GameLostPanel(this))
     }
 }
