@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 2:53 AM.
+ * This file was last modified at 7/9/21, 3:03 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -126,7 +126,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     private fun initSystems() = engine.apply {
         position // initialize globals...
 
-        add(TurretTargetSystem())
+        add(TurretTargetSystem(map.path))
         add(TurretShootSystem())
         add(VelocitySystem())
         add(OOBRemoveSystem())

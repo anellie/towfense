@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 2:50 AM.
+ * This file was last modified at 7/9/21, 3:17 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -23,8 +23,8 @@ class Path {
     val start = IntVector()
     val segments = ArrayList<IntArray>()
     val mapSize = IntVector(32, 32)
-    val enemySpawnInterval = 5f
-    val enemyIntervalReduction = 0.98f
+    val enemySpawnInterval = 3f
+    val enemyIntervalReduction = 0.995f
 }
 
 enum class Direction {

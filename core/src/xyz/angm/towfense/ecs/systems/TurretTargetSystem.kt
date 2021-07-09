@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 7:46 PM.
+ * This file was last modified at 7/9/21, 3:29 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -13,11 +13,13 @@ import xyz.angm.rox.Family
 import xyz.angm.rox.systems.IteratingSystem
 import xyz.angm.towfense.ecs.components.EnemyComponent
 import xyz.angm.towfense.ecs.components.TurretComponent
+import xyz.angm.towfense.ecs.pathed
 import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.turret
 import xyz.angm.towfense.level.Aiming
+import xyz.angm.towfense.level.Path
 
-class TurretTargetSystem : IteratingSystem(Family.allOf(TurretComponent::class)) {
+class TurretTargetSystem(private val path: Path) : IteratingSystem(Family.allOf(TurretComponent::class)) {
 
     private val tmpV = Vector2()
     private val enemies = Family.allOf(EnemyComponent::class)
@@ -29,7 +31,7 @@ class TurretTargetSystem : IteratingSystem(Family.allOf(TurretComponent::class))
         when (turret.kind.aiming) {
             Aiming.SingleEnemy -> {
                 val closestEnemy = findClosest(entity, tPos)
-                turret.target.set(closestEnemy[position])
+                turret.target.set(calcEnemyPos(tPos, closestEnemy))
                 turret.hasTarget = closestEnemy !== entity
             }
 
@@ -59,5 +61,26 @@ class TurretTargetSystem : IteratingSystem(Family.allOf(TurretComponent::class))
         }
 
         return closestEnemy
+    }
+
+    // Calculate position at which a bullet must shoot to hit the given enemy.
+    private fun calcEnemyPos(turretPos: Vector2, enemy: Entity): Vector2 {
+        val posC = enemy[position].cpy()
+        val pathC = enemy.c(pathed) ?: return posC
+
+        val pathS = pathC.segment
+        val pathD = pathC.distTravelled
+
+        var delta = 0f
+        var dist = 9999f
+        while (delta < dist) {
+            moveOnPath(path, posC, pathC, 0.16f)
+            delta += 0.16f
+            dist = turretPos.dst(posC) / BULLET_SPEED
+        }
+
+        pathC.segment = pathS
+        pathC.distTravelled = pathD
+        return posC
     }
 }

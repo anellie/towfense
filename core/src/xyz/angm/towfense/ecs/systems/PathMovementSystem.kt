@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:15 AM.
+ * This file was last modified at 7/9/21, 3:00 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -29,26 +29,28 @@ class PathMovementSystem(private val path: Path, private val endReached: (Entity
         PositionComponent::class
     )
 ) {
-
     override fun process(entity: Entity, delta: Float) {
         val posC = entity[position]
         val pathC = entity[pathed]
-        pathC.distTravelled += delta * SPEED
-
-        val segment = path.segments[pathC.segment]
-        Direction.add(posC, segment[DIR], delta * SPEED)
-
-        if (pathC.distTravelled >= (segment[LEN] + 1)) {
-            posC.round()
-            pathC.segment++
-            pathC.distTravelled = 0f
-
-            if (path.segments.size == pathC.segment) {
-                endReached(entity)
-                pathC.segment--
-            }
+        if (moveOnPath(path, posC, pathC, delta) && path.segments.size == pathC.segment) {
+            endReached(entity)
+            pathC.segment--
         }
     }
+}
+
+fun moveOnPath(path: Path, posC: Vector2, pathC: PathedComponent, delta: Float): Boolean {
+    pathC.distTravelled += delta * SPEED
+
+    val segment = path.segments[pathC.segment]
+    Direction.add(posC, segment[DIR], delta * SPEED)
+
+    return if (pathC.distTravelled >= (segment[LEN] + 1)) {
+        posC.round()
+        pathC.segment++
+        pathC.distTravelled = 0f
+        true
+    } else false
 }
 
 private fun Vector2.round() {

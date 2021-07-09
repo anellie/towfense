@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:15 AM.
+ * This file was last modified at 7/9/21, 3:13 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -26,7 +26,7 @@ class CollisionSystem(private val enemyKilled: (Entity) -> Unit) : IteratingSyst
 
         for (bullet in engine[bullets]) {
             val bPos = bullet[position]
-            if (bPos.x.toInt() == pos.x.toInt() && bPos.y.toInt() == pos.y.toInt()) {
+            if (bPos.x >= pos.x && bPos.x <= (pos.x + 1) && bPos.y >= pos.y && bPos.y <= (pos.y + 1)) {
                 engine.removeEntity(bullet)
                 enemy.health--
             }
