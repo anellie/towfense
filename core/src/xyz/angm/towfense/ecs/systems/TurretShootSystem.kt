@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 11:41 PM.
+ * This file was last modified at 7/9/21, 2:46 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -19,7 +19,7 @@ import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.turret
 import xyz.angm.towfense.level.Shooting
 
-private const val BULLET_SPEED = 30f
+private const val BULLET_SPEED = 60f
 
 class TurretShootSystem : IteratingSystem(Family.allOf(TurretComponent::class)) {
 
@@ -30,7 +30,7 @@ class TurretShootSystem : IteratingSystem(Family.allOf(TurretComponent::class)) 
         turret.timeUntilShot -= delta
         if (turret.timeUntilShot <= 0f) {
             shoot(entity[position], turret)
-            turret.timeUntilShot = turret.kind.interval
+            turret.timeUntilShot += turret.kind.interval
         }
     }
 
@@ -45,7 +45,7 @@ class TurretShootSystem : IteratingSystem(Family.allOf(TurretComponent::class)) 
             Shooting.Allround -> {
                 for (i in 0 until turret.kind.shotCount) {
                     val angle = (i.toFloat() / turret.kind.shotCount) * 360f
-                    val vel = tmpV.set(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle))
+                    val vel = tmpV.set(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle)).scl(BULLET_SPEED / 5f)
                     createBullet(engine, pos, vel)
                 }
             }

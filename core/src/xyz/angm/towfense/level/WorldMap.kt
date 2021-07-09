@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 8:11 PM.
+ * This file was last modified at 7/9/21, 1:53 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -26,12 +26,12 @@ class WorldMap private constructor(val path: Path) : Group() {
     init {
         val pathImage = Assets.tex("map/path")
         val location = path.start.cpy()
-        var delay = 0.1f
+        var delay = 0.02f
         for (s in path.segments) {
             for (i in 0..s[LEN]) {
                 plotPoint(pathImage, location, s[DIR], delay)
                 Direction.add(location, s[DIR], 1)
-                delay += 0.1f
+                delay += 0.02f
             }
         }
 

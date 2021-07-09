@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:55 AM.
+ * This file was last modified at 7/9/21, 2:53 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -22,7 +22,6 @@ import xyz.angm.rox.EntityListener
 import xyz.angm.rox.systems.EntitySystem
 import xyz.angm.towfense.Towfense
 import xyz.angm.towfense.actions.InputHandler
-import xyz.angm.towfense.ecs.createEnemy
 import xyz.angm.towfense.ecs.createTurret
 import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.removeEntity
@@ -30,6 +29,7 @@ import xyz.angm.towfense.ecs.systems.*
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.graphics.panels.game.GameLostPanel
+import xyz.angm.towfense.graphics.panels.game.IntroAnimationPanel
 import xyz.angm.towfense.graphics.window.ControlsWindow
 import xyz.angm.towfense.graphics.window.DebugWindow
 import xyz.angm.towfense.graphics.window.TurretSelectWindow
@@ -64,7 +64,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     // Player state
     var coins = 200
     var lives = 3
-    var gameSpeed = 1f
+    var gameTicksPerFrame = 0
 
     val entitiesLoaded get() = engine.entities.size
     val systemsActive get() = engine.systems.size
@@ -73,6 +73,8 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         initSystems()
         initState()
         initRender()
+
+        startAnimation()
     }
 
     override fun render(delta: Float) {
@@ -86,7 +88,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
-        engine.update(delta * gameSpeed)
+        for (i in 0 until gameTicksPerFrame) engine.update(delta)
 
         gameStage.act(delta)
         gameStage.draw()
@@ -128,6 +130,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         add(TurretShootSystem())
         add(VelocitySystem())
         add(OOBRemoveSystem())
+        add(EnemySpawnSystem(map.path.enemySpawnInterval, map.path.enemyIntervalReduction))
 
         add(PathMovementSystem(map.path) { entity ->
             removeEntity(entity)
@@ -153,16 +156,6 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         Gdx.input.inputProcessor = inputMultiplexer
         Gdx.input.isCursorCatched = false
         Gdx.input.setCursorPosition(uiStage.viewport.screenWidth / 2, (uiStage.viewport.screenY + uiStage.viewport.screenHeight) / 2)
-
-        // test enemy
-        gameStage.addAction(
-            Actions.repeat(
-                -1, Actions.sequence(
-                    Actions.run { createEnemy(engine) },
-                    Actions.delay(0.5f)
-                )
-            )
-        )
     }
 
     // Initialize all rendering components
@@ -178,6 +171,28 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         window(ControlsWindow(this))
 
         gameStage.addActor(map)
+    }
+
+    private fun startAnimation() {
+        uiStage.addAction(
+            Actions.sequence(
+                Actions.run { pushPanel(IntroAnimationPanel(this, "3")) },
+                Actions.delay(1f),
+                Actions.run { popPanel() },
+                Actions.run { pushPanel(IntroAnimationPanel(this, "2")) },
+                Actions.delay(1f),
+                Actions.run { popPanel() },
+                Actions.run { pushPanel(IntroAnimationPanel(this, "1")) },
+                Actions.delay(1f),
+                Actions.run { popPanel() },
+                Actions.run { pushPanel(IntroAnimationPanel(this, "GO!")) },
+                Actions.delay(1f),
+                Actions.run {
+                    popPanel()
+                    gameTicksPerFrame = 1
+                },
+            )
+        )
     }
 
     override fun resize(width: Int, height: Int) {
@@ -200,7 +215,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     }
 
     private fun playerLost() {
-        gameSpeed = 0f
+        gameTicksPerFrame = 0
         Gdx.input.inputProcessor = uiStage
         while (uiPanels.panelsInStack > 0) popPanel()
         pushPanel(GameLostPanel(this))

@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:56 AM.
+ * This file was last modified at 7/9/21, 2:48 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -39,19 +39,19 @@ class ControlsWindow(private val screen: GameScreen) : Window("window.controls",
 
         val group = ButtonGroup<Button>()
         group.setMaxCheckCount(1)
-        fun btn(multi: Float, name: String) {
+        fun btn(multi: Int, name: String) {
             val btn = scene2d.visTextButton(name, "vis-default") {
                 visTextTooltip("${multi}x")
-                onClick { screen.gameSpeed = multi }
+                onClick { screen.gameTicksPerFrame = multi }
                 click()
             }
             group.add(btn)
             add(btn).pad(3f)
         }
-        btn(0f, "||")
-        btn(1f, ">")
-        btn(2f, ">>")
-        btn(4f, ">>>>")
+        btn(0, "||")
+        btn(1, ">")
+        btn(2, ">>")
+        btn(4, ">>>>")
 
         pack()
 
