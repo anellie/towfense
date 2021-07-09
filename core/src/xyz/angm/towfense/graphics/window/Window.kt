@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 12:47 AM.
+ * This file was last modified at 7/9/21, 1:54 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -13,5 +13,8 @@ import xyz.angm.towfense.resources.I18N
 abstract class Window(name: String, closable: Boolean) : VisWindow(I18N.tryGet(name) ?: name, true) {
     init {
         if (closable) addCloseButton()
+    }
+
+    open fun viewportResize() {
     }
 }

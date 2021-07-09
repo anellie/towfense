@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:00 AM.
+ * This file was last modified at 7/9/21, 1:56 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -54,8 +54,10 @@ class ControlsWindow(private val screen: GameScreen) : Window("window.controls",
         btn(4f, ">>>>")
 
         pack()
-        setPosition(999999f, 300f)
+
     }
+
+    override fun viewportResize() = setPosition(999999f, 300f)
 
     override fun act(delta: Float) {
         super.act(delta)

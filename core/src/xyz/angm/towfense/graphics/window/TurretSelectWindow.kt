@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:52 AM.
+ * This file was last modified at 7/9/21, 1:59 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -50,8 +50,9 @@ class TurretSelectWindow(screen: GameScreen) : Window("window.turret-select", fa
         }
 
         width = 350f
-        setPosition(999999f, 0f)
     }
+
+    override fun viewportResize() = setPosition(999999f, 0f)
 
     override fun setStage(stage: Stage?) {
         super.setStage(stage)
@@ -61,7 +62,7 @@ class TurretSelectWindow(screen: GameScreen) : Window("window.turret-select", fa
     private class BuildTooltip(private val parent: Actor) : Window("---", false) {
 
         init {
-            isVisible = true
+            isVisible = false
         }
 
         // Returns a ClickListener to be used with a button for the passed in turret kind

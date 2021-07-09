@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:51 AM.
+ * This file was last modified at 7/9/21, 1:55 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.PerformanceCounter
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import ktx.collections.*
 import xyz.angm.rox.Engine
 import xyz.angm.rox.EntityListener
 import xyz.angm.rox.systems.EntitySystem
@@ -32,6 +33,7 @@ import xyz.angm.towfense.graphics.panels.game.GameLostPanel
 import xyz.angm.towfense.graphics.window.ControlsWindow
 import xyz.angm.towfense.graphics.window.DebugWindow
 import xyz.angm.towfense.graphics.window.TurretSelectWindow
+import xyz.angm.towfense.graphics.window.Window
 import xyz.angm.towfense.level.TurretKind
 import xyz.angm.towfense.level.WorldMap
 import xyz.angm.towfense.runLogE
@@ -54,6 +56,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
     // 2D Graphics
     private val uiStage = Stage(viewport)
+    private val windows = GdxArray<Window>()
     private val uiPanels = PanelStack()
     private val gameStage = Stage(ExtendViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
     val inputHandler = InputHandler(this)
@@ -164,10 +167,15 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
     // Initialize all rendering components
     private fun initRender() {
+        fun window(window: Window) {
+            uiStage.addActor(window)
+            windows.add(window)
+            window.viewportResize()
+        }
         uiStage.addActor(uiPanels)
-        uiStage.addActor(DebugWindow(this))
-        uiStage.addActor(TurretSelectWindow(this))
-        uiStage.addActor(ControlsWindow(this))
+        window(DebugWindow(this))
+        window(TurretSelectWindow(this))
+        window(ControlsWindow(this))
 
         gameStage.addActor(map)
     }
@@ -175,6 +183,9 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     override fun resize(width: Int, height: Int) {
         uiStage.viewport.update(width, height, true)
         gameStage.viewport.update(width, height, true)
+        for (window in windows) {
+            window.viewportResize()
+        }
     }
 
     /** hide is called when the screen is no longer active, at which point this type of screen becomes dereferenced and needs to be disposed. */
