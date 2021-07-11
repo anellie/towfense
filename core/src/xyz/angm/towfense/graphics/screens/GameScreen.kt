@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 3:03 AM.
+ * This file was last modified at 7/11/21, 2:16 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -20,6 +20,7 @@ import ktx.collections.*
 import xyz.angm.rox.Engine
 import xyz.angm.rox.EntityListener
 import xyz.angm.rox.systems.EntitySystem
+import xyz.angm.towfense.IntVector
 import xyz.angm.towfense.Towfense
 import xyz.angm.towfense.actions.InputHandler
 import xyz.angm.towfense.ecs.createTurret
@@ -71,9 +72,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
     init {
         initSystems()
-        initState()
         initRender()
-
         startAnimation()
     }
 
@@ -113,13 +112,16 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         uiPanels.popPanel()
     }
 
-    fun placeTurret(x: Int, y: Int, kind: TurretKind) {
+    fun placeTurret(x: Int, y: Int, kind: TurretKind): Boolean {
         tmpV.set(x.toFloat(), y.toFloat())
         gameStage.screenToStageCoordinates(tmpV)
-        tmpV.sub(0.5f, 0.5f)
+        val pos = IntVector(tmpV)
+        if (map.isOccupied(pos)) return false
 
         coins -= kind.cost
-        createTurret(engine, tmpV, kind)
+        map.setOccupied(pos)
+        createTurret(engine, pos.v2(), kind)
+        return true
     }
 
     // Initialize all ECS systems
@@ -147,15 +149,12 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         add(display as EntitySystem)
     }
 
-    // Initialize everything not render-related
-    private fun initState() {
-        // Input
+    private fun initInput() {
         val inputMultiplexer = InputMultiplexer()
         inputMultiplexer.addProcessor(uiStage)
         inputMultiplexer.addProcessor(inputHandler)
         Gdx.input.inputProcessor = inputMultiplexer
         Gdx.input.isCursorCatched = false
-        Gdx.input.setCursorPosition(uiStage.viewport.screenWidth / 2, (uiStage.viewport.screenY + uiStage.viewport.screenHeight) / 2)
     }
 
     // Initialize all rendering components
@@ -174,6 +173,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     }
 
     private fun startAnimation() {
+        Gdx.input.isCursorCatched = true
         uiStage.addAction(
             Actions.sequence(
                 Actions.run { pushPanel(IntroAnimationPanel(this, "3")) },
@@ -190,6 +190,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
                 Actions.run {
                     popPanel()
                     gameTicksPerFrame = 1
+                    initInput()
                 },
             )
         )

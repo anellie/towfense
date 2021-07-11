@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:53 AM.
+ * This file was last modified at 7/11/21, 2:13 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -21,7 +21,9 @@ import xyz.angm.towfense.resources.Assets
 class WorldMap private constructor(val path: Path) : Group() {
 
     private val tmpV = Vector2()
+    private val tmpIV = IntVector()
     private val preview = PlacementPreview()
+    private val occupiedLocations = HashSet<IntVector>()
 
     init {
         val pathImage = Assets.tex("map/path")
@@ -38,11 +40,16 @@ class WorldMap private constructor(val path: Path) : Group() {
         addActor(preview)
     }
 
+    fun isOccupied(pos: IntVector) = occupiedLocations.contains(pos)
+
+    fun setOccupied(pos: IntVector) = occupiedLocations.add(pos)
+
     fun updatePlacementPreview(x: Int, y: Int, kind: TurretKind?) {
         if (kind != null) {
             tmpV.set(x.toFloat(), y.toFloat())
             stage.screenToStageCoordinates(tmpV)
-            preview.update(tmpV, kind)
+            tmpIV.set(tmpV)
+            preview.update(tmpIV, kind, !isOccupied(tmpIV))
             preview.isVisible = true
         } else {
             preview.isVisible = false
@@ -69,6 +76,8 @@ class WorldMap private constructor(val path: Path) : Group() {
                 )
             )
         )
+
+        setOccupied(loc.cpy())
     }
 
     companion object {

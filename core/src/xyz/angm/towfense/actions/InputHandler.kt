@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:09 AM.
+ * This file was last modified at 7/11/21, 2:15 AM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -28,9 +28,9 @@ class InputHandler(private val screen: GameScreen) : InputAdapter() {
         return true
     }
 
-    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        screen.placeTurret(screenX, screenY, currentKind ?: return false)
-        currentKind = null
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        val success = screen.placeTurret(screenX, screenY, currentKind ?: return false)
+        if (success) currentKind = null
         return true
     }
 
