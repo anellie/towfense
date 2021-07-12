@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 3:17 AM.
+ * This file was last modified at 7/12/21, 5:10 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -27,32 +27,25 @@ class Path {
     val enemyIntervalReduction = 0.995f
 }
 
-enum class Direction {
-    North,
-    West,
-    South,
-    East;
-
-    companion object {
-        fun add(vec: IntVector, dir: Int, len: Int): IntVector {
-            when (dir) {
-                0 -> vec.y += len
-                1 -> vec.x -= len
-                2 -> vec.y -= len
-                else -> vec.x += len
-            }
-            return vec
+object Direction {
+    fun add(vec: IntVector, dir: Int, len: Int): IntVector {
+        when (dir) {
+            0 -> vec.y += len
+            1 -> vec.x -= len
+            2 -> vec.y -= len
+            else -> vec.x += len
         }
+        return vec
+    }
 
-        fun add(vec: Vector2, dir: Int, len: Float): Vector2 {
-            when (dir) {
-                0 -> vec.y += len
-                1 -> vec.x -= len
-                2 -> vec.y -= len
-                else -> vec.x += len
-            }
-            return vec
+    fun add(vec: Vector2, dir: Int, len: Float): Vector2 {
+        when (dir) {
+            0 -> vec.y += len
+            1 -> vec.x -= len
+            2 -> vec.y -= len
+            else -> vec.x += len
         }
+        return vec
     }
 }
 

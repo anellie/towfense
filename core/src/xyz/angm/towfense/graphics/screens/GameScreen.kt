@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/12/21, 4:46 PM.
+ * This file was last modified at 7/12/21, 5:17 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -23,11 +23,8 @@ import xyz.angm.rox.systems.EntitySystem
 import xyz.angm.towfense.IntVector
 import xyz.angm.towfense.Towfense
 import xyz.angm.towfense.actions.InputHandler
-import xyz.angm.towfense.ecs.createTurret
-import xyz.angm.towfense.ecs.position
-import xyz.angm.towfense.ecs.removeEntity
+import xyz.angm.towfense.ecs.*
 import xyz.angm.towfense.ecs.systems.*
-import xyz.angm.towfense.ecs.turret
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.graphics.panels.game.DirectionSelectPanel
@@ -130,8 +127,8 @@ class GameScreen(private val game: Towfense, val map: WorldMap) : ScreenAdapter(
         if (map.isOccupied(pos)) return false
 
         coins -= kind.cost
-        map.setOccupied(pos)
         val entity = createTurret(engine, pos.v2(), kind)
+        map.setOccupied(pos, entity[display].actor)
 
         if (kind.aiming == Aiming.Fixed) {
             uiPanels.pushPanel(DirectionSelectPanel(this) {
