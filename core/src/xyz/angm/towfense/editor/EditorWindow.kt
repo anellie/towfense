@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 1:38 AM.
+ * This file was last modified at 7/12/21, 4:24 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -25,7 +25,7 @@ class EditorWindow(screen: EditorScreen) : Window("Editor", false) {
 
     init {
         add(scene2d.visTable {
-            val lModel = IntSpinnerModel(0, 0, Levels.size - 1)
+            val lModel = IntSpinnerModel(0, 1, Levels.size)
             val xModel = IntSpinnerModel(screen.map.path.mapSize.x, 1, 128)
             val yModel = IntSpinnerModel(screen.map.path.mapSize.y, 1, 128)
 
@@ -33,11 +33,11 @@ class EditorWindow(screen: EditorScreen) : Window("Editor", false) {
                 label("Select Level    ")
                 spinner("", lModel) {
                     onChange {
-                        screen.changeLevel(lModel.value)
+                        screen.changeLevel(lModel.value - 1)
                         xModel.setValue(screen.map.path.mapSize.x, false)
                         yModel.setValue(screen.map.path.mapSize.y, false)
 
-                        screen.toast("Changed to level ${lModel.value}!")
+                        screen.toast("Changed to level ${lModel.value - 1}!")
                     }
                 }
                 it.pad(5f).padTop(20f).row()
@@ -67,7 +67,7 @@ class EditorWindow(screen: EditorScreen) : Window("Editor", false) {
             visTextButton("Create New Level", "vis-default") {
                 it.height(Skin.textButtonHeight).width(Skin.textButtonWidth).pad(5f).row()
                 onClick {
-                    screen.toast("Created level ${Levels.new()}!")
+                    screen.toast("Created level ${Levels.new() + 1}!")
                     lModel.max = Levels.size - 1
                 }
             }

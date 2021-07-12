@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:33 AM.
+ * This file was last modified at 7/12/21, 4:53 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -17,6 +17,7 @@ import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
 import xyz.angm.towfense.graphics.panels.menu.LoadingPanel
 import xyz.angm.towfense.graphics.panels.menu.MainMenuPanel
+import xyz.angm.towfense.level.WorldMap
 import xyz.angm.towfense.resources.Assets
 
 /** The menu screen. It manages the current menu panel stack and draws it on top of a nice background.
@@ -62,14 +63,8 @@ class MenuScreen(private val game: Towfense) : ScreenAdapter(), Screen {
         panelStack.dispose()
     }
 
-    /** Recreates this screen. Used when resource pack changed, which requires all assets to be recreated. */
-    fun reload() {
-        dispose()
-        game.screen = MenuScreen(game)
-    }
-
-    fun startNewGame() {
-        game.screen = GameScreen(game)
+    fun startNewGame(levelIdx: Int) {
+        game.screen = GameScreen(game, WorldMap.of(levelIdx))
     }
 
     fun editor() {

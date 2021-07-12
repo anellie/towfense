@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/11/21, 2:16 AM.
+ * This file was last modified at 7/12/21, 4:46 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -27,14 +27,18 @@ import xyz.angm.towfense.ecs.createTurret
 import xyz.angm.towfense.ecs.position
 import xyz.angm.towfense.ecs.removeEntity
 import xyz.angm.towfense.ecs.systems.*
+import xyz.angm.towfense.ecs.turret
 import xyz.angm.towfense.graphics.panels.Panel
 import xyz.angm.towfense.graphics.panels.PanelStack
+import xyz.angm.towfense.graphics.panels.game.DirectionSelectPanel
 import xyz.angm.towfense.graphics.panels.game.GameLostPanel
 import xyz.angm.towfense.graphics.panels.game.IntroAnimationPanel
 import xyz.angm.towfense.graphics.window.ControlsWindow
 import xyz.angm.towfense.graphics.window.DebugWindow
 import xyz.angm.towfense.graphics.window.TurretSelectWindow
 import xyz.angm.towfense.graphics.window.Window
+import xyz.angm.towfense.level.Aiming
+import xyz.angm.towfense.level.Direction
 import xyz.angm.towfense.level.TurretKind
 import xyz.angm.towfense.level.WorldMap
 import xyz.angm.towfense.runLogE
@@ -47,7 +51,7 @@ import xyz.angm.towfense.runLogE
  * The only other responsibility of this class is putting together all graphics sources and drawing them.
  *
  * @property engine The ECS engine used */
-class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0)) : ScreenAdapter(), Screen {
+class GameScreen(private val game: Towfense, val map: WorldMap) : ScreenAdapter(), Screen {
 
     private val bench = PerformanceCounter("render")
     private val tmpV = Vector2()
@@ -63,9 +67,10 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     val inputHandler = InputHandler(this)
 
     // Player state
-    var coins = 200
+    var coins = 350
     var lives = 3
     var gameTicksPerFrame = 0
+    var paused = false
 
     val entitiesLoaded get() = engine.entities.size
     val systemsActive get() = engine.systems.size
@@ -87,7 +92,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
-        for (i in 0 until gameTicksPerFrame) engine.update(delta)
+        if (!paused) for (i in 0 until gameTicksPerFrame) engine.update(delta)
 
         gameStage.act(delta)
         gameStage.draw()
@@ -106,10 +111,16 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
     override fun pushPanel(panel: Panel) {
         uiPanels.pushPanel(panel)
+        Gdx.input.inputProcessor = uiStage
+        paused = true
     }
 
     override fun popPanel() {
         uiPanels.popPanel()
+        if (uiPanels.panelsInStack <= 0) {
+            initInput()
+            paused = false
+        }
     }
 
     fun placeTurret(x: Int, y: Int, kind: TurretKind): Boolean {
@@ -120,7 +131,14 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
 
         coins -= kind.cost
         map.setOccupied(pos)
-        createTurret(engine, pos.v2(), kind)
+        val entity = createTurret(engine, pos.v2(), kind)
+
+        if (kind.aiming == Aiming.Fixed) {
+            uiPanels.pushPanel(DirectionSelectPanel(this) {
+                Direction.add(entity[turret].target.set(entity[position]), it, 1f)
+            })
+        }
+
         return true
     }
 
@@ -173,7 +191,6 @@ class GameScreen(private val game: Towfense, val map: WorldMap = WorldMap.of(0))
     }
 
     private fun startAnimation() {
-        Gdx.input.isCursorCatched = true
         uiStage.addAction(
             Actions.sequence(
                 Actions.run { pushPanel(IntroAnimationPanel(this, "3")) },
