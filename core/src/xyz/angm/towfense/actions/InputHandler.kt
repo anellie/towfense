@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/11/21, 2:15 AM.
+ * This file was last modified at 7/12/21, 6:51 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -15,6 +15,7 @@ import xyz.angm.towfense.resources.configuration
 class InputHandler(private val screen: GameScreen) : InputAdapter() {
 
     var currentKind: TurretKind? = null
+    var placeMultiple = false
 
     override fun keyDown(keycode: Int): Boolean {
         val bind = configuration.keybinds[keycode] ?: return false
@@ -30,13 +31,7 @@ class InputHandler(private val screen: GameScreen) : InputAdapter() {
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val success = screen.placeTurret(screenX, screenY, currentKind ?: return false)
-        if (success) currentKind = null
-        return true
-    }
-
-    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
-        screen.map.updatePlacementPreview(screenX, screenY, currentKind)
-        screen.placeTurret(screenX, screenY, currentKind ?: return false)
+        if (success && !(placeMultiple && screen.coins >= currentKind!!.cost)) currentKind = null
         return true
     }
 

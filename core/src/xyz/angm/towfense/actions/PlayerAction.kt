@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:11 AM.
+ * This file was last modified at 7/12/21, 6:48 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -35,6 +35,7 @@ object PlayerActions {
         fun add(name: String, down: (GameScreen) -> Unit) = add(name, down, {})
 
         add("pause") { it.pushPanel(PausePanel(it)) }
+        add("placeMultiple", { it.inputHandler.placeMultiple = true }, { it.inputHandler.placeMultiple = false })
     }
 
     /** Get an action. */

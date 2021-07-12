@@ -1,4 +1,5 @@
 keybinds:
   bindings:
     "Escape": "pause"
+    "L-Shift": "placeMultiple"
 language: "English"
