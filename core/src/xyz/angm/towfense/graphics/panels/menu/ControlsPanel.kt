@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/5/21, 9:33 PM.
+ * This file was last modified at 7/12/21, 7:08 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -11,14 +11,11 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.utils.Align
 import ktx.actors.onClick
 import ktx.actors.onKeyDown
 import ktx.actors.plusAssign
 import ktx.scene2d.scene2d
 import ktx.scene2d.scrollPane
-import ktx.scene2d.textField
-import ktx.scene2d.vis.visLabel
 import ktx.scene2d.vis.visTable
 import xyz.angm.towfense.actions.PlayerAction
 import xyz.angm.towfense.graphics.Skin
@@ -37,7 +34,7 @@ class ControlsPanel(private var screen: Screen) : Panel(screen) {
     init {
         this += scene2d.visTable {
             visTextButton(I18N["back"]) {
-                it.height(Skin.textButtonHeight).width(Skin.textButtonWidth).pad(20f).colspan(2)
+                it.height(Skin.textButtonHeight).width(Skin.textButtonWidth).pad(20f).colspan(2).row()
                 onClick { screen.popPanel() }
             }
 
