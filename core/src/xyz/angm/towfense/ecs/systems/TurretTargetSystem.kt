@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 3:29 AM.
+ * This file was last modified at 7/12/21, 5:28 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -31,8 +31,9 @@ class TurretTargetSystem(private val path: Path) : IteratingSystem(Family.allOf(
         when (turret.kind.aiming) {
             Aiming.SingleEnemy -> {
                 val closestEnemy = findClosest(entity, tPos)
+                val dist = tmpV.set(closestEnemy[position]).dst(tPos)
                 turret.target.set(calcEnemyPos(tPos, closestEnemy))
-                turret.hasTarget = closestEnemy !== entity
+                turret.hasTarget = closestEnemy !== entity && dist <= turret.kind.range
             }
 
             else -> turret.hasTarget = anyEnemyInRange(tPos, turret.kind.range)
