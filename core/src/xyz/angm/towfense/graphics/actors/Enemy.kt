@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/7/21, 11:17 PM.
+ * This file was last modified at 7/12/21, 8:17 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -16,7 +16,7 @@ import xyz.angm.towfense.resources.Assets
 
 class Enemy(private val enemy: EnemyComponent) : Group() {
 
-    private val bar = HealthBar(enemy.health, 10)
+    private val bar = HealthBar(enemy.health, enemy.maxHealth)
 
     init {
         val actor = Image(Assets.tex("entity/enemy"))

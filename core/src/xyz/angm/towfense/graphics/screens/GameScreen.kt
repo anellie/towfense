@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/12/21, 7:18 PM.
+ * This file was last modified at 7/12/21, 8:17 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -88,7 +88,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap) : ScreenAdapter(
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
-        if (!paused) for (i in 0 until gameTicksPerFrame) engine.update(delta)
+        if (!paused && delta < 0.1f) for (i in 0 until gameTicksPerFrame) engine.update(delta)
 
         gameStage.act(delta)
         gameStage.draw()
