@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 1:03 AM.
+ * This file was last modified at 7/12/21, 6:46 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -18,8 +18,8 @@ import xyz.angm.towfense.graphics.actors.Turret
 import xyz.angm.towfense.level.TurretKind
 import xyz.angm.towfense.resources.Assets
 
-fun createEnemy(engine: Engine) = engine.entity {
-    with<PositionComponent>()
+fun createEnemy(engine: Engine, startPos: Vector2) = engine.entity {
+    with<PositionComponent> { set(startPos) }
     with<PathedComponent>()
     val enemy = with<EnemyComponent>()
     with<DisplayComponent> { actor = Enemy(enemy) }

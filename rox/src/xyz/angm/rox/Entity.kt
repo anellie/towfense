@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/6/21, 12:22 AM.
+ * This file was last modified at 7/12/21, 6:45 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -81,15 +81,17 @@ class Entity private constructor() : Serializable {
     /** @return If this entity is part of the given family. */
     infix fun partOf(family: Family) = familyBits[family.index]
 
+    // TODO broken
     companion object {
 
         private val free = RoxArray<Entity>(false, 20)
 
         @Synchronized
-        fun get() = if (free.isEmpty) Entity() else free.pop()!!
+        fun get() = Entity()
 
         @Synchronized
         fun free(entity: Entity) {
+            return
             entity.components.clear()
             entity.componentBits.clear()
             entity.familyBits.clear()

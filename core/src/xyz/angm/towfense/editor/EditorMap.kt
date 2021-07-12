@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 1:44 AM.
+ * This file was last modified at 7/12/21, 6:46 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -34,7 +34,7 @@ class EditorMap private constructor(val path: Path) : Group() {
     }
 
     fun addSegment(segment: IntArray, trans: Float) {
-        val pathImage = Assets.tex("map/path")
+        val pathImage = Assets.tex("ui/arrow")
         val location = segmentEnds[segmentEnds.size - 1].cpy()
         val group = Group()
         for (i in 0..segment[LEN]) {
@@ -68,6 +68,7 @@ class EditorMap private constructor(val path: Path) : Group() {
     }
 
     fun materializeLast() {
+        if (segments.size == 0) return
         for (actor in segments[segments.size - 1].children) {
             actor.alpha = 1f
         }

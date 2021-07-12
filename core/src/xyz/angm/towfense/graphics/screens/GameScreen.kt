@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/12/21, 5:17 PM.
+ * This file was last modified at 7/12/21, 6:35 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -147,7 +147,7 @@ class GameScreen(private val game: Towfense, val map: WorldMap) : ScreenAdapter(
         add(TurretShootSystem())
         add(VelocitySystem())
         add(OOBRemoveSystem())
-        add(EnemySpawnSystem(map.path.enemySpawnInterval, map.path.enemyIntervalReduction))
+        add(EnemySpawnSystem(map.path.start.v2(), map.path.enemySpawnInterval, map.path.enemyIntervalReduction))
 
         add(PathMovementSystem(map.path) { entity ->
             removeEntity(entity)

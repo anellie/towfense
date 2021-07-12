@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/11/21, 2:17 AM.
+ * This file was last modified at 7/12/21, 5:51 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -28,6 +28,7 @@ class PlacementPreview : Image(TextureRegion(Assets.tex("entity/turret/turret_ba
         setSize(1f, 1f)
         setColor(1f, 1f, 1f, 0.5f)
         setOrigin(Align.center)
+        isVisible = false
         shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 0.4f)
     }
 

@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/9/21, 2:48 AM.
+ * This file was last modified at 7/12/21, 5:53 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -31,11 +31,11 @@ class ControlsWindow(private val screen: GameScreen) : Window("window.controls",
         add(scene2d.horizontalGroup {
             visLabel("${I18N["coins"]}    ")
             coinLabel = visLabel(coins.toString())
-        }).colspan(4).row()
+        }).colspan(5).row()
         add(scene2d.horizontalGroup {
             visLabel("${I18N["lives"]}    ")
             livesLabel = visLabel(lives.toString())
-        }).colspan(4).row()
+        }).colspan(5).row()
 
         val group = ButtonGroup<Button>()
         group.setMaxCheckCount(1)
@@ -52,6 +52,7 @@ class ControlsWindow(private val screen: GameScreen) : Window("window.controls",
         btn(1, ">")
         btn(2, ">>")
         btn(4, ">>>>")
+        btn(8, ">>>>>>")
 
         pack()
 

@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 1:44 AM.
+ * This file was last modified at 7/12/21, 6:46 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -13,9 +13,11 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.badlogic.gdx.utils.viewport.FitViewport
 import com.kotcrab.vis.ui.util.ToastManager
 import com.kotcrab.vis.ui.widget.VisTable
+import xyz.angm.towfense.Towfense
+import xyz.angm.towfense.graphics.screens.MenuScreen
 import xyz.angm.towfense.graphics.screens.viewport
 
 class EditorScreen : ScreenAdapter() {
@@ -24,7 +26,7 @@ class EditorScreen : ScreenAdapter() {
     var map = EditorMap.of(0)
     private val input = EditorInputHandler(this)
 
-    var gameStage = Stage(ExtendViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
+    var gameStage = Stage(FitViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
     private val uiStage = Stage(viewport)
     private val toasts = ToastManager(uiStage)
 
@@ -44,9 +46,11 @@ class EditorScreen : ScreenAdapter() {
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
+        gameStage.viewport.apply()
         gameStage.act(delta)
         gameStage.draw()
 
+        uiStage.viewport.apply()
         uiStage.act(delta)
         uiStage.draw()
     }
@@ -67,10 +71,14 @@ class EditorScreen : ScreenAdapter() {
         reload()
     }
 
+    fun returnToMenu() {
+        (Gdx.app.applicationListener as Towfense).screen = MenuScreen(Gdx.app.applicationListener as Towfense)
+    }
+
     internal fun reload() {
         map.remove()
         map = EditorMap.of(mapIdx)
-        gameStage = Stage(ExtendViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
+        gameStage = Stage(FitViewport(map.path.mapSize.x.toFloat(), map.path.mapSize.y.toFloat()))
         gameStage.addActor(map)
     }
 }
