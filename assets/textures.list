@@ -1,0 +1,12 @@
+textures/entity/bullet.png
+textures/entity/enemy.png
+textures/entity/turret/boomer_arm.png
+textures/entity/turret/boomer_base.png
+textures/entity/turret/sentry_arm.png
+textures/entity/turret/sentry_base.png
+textures/entity/turret/turret_arm.png
+textures/entity/turret/turret_base.png
+textures/map/corner.png
+textures/map/crossing.png
+textures/map/straight_path.png
+textures/ui/arrow.png

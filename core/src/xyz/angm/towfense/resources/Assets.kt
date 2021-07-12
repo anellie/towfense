@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/8/21, 12:10 AM.
+ * This file was last modified at 7/12/21, 5:52 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -24,9 +24,8 @@ object Assets {
         assets.finishLoading() // Assets queued are initial assets, load immediately
         Skin.reload()
 
-        loadDir<Sound>(file("sounds"))
-        loadDir<Texture>(file("textures"))
-        loadDir<Texture>(file("textures/entity"))
+        loadList<Sound>(file("sounds.list"))
+        loadList<Texture>(file("textures.list"))
     }
 
     fun tex(name: String): Texture = get("textures/$name.png")
@@ -35,15 +34,13 @@ object Assets {
 
     fun <T> get(file: String): T = assets.get(file)
 
-    private inline fun <reified T : Any> loadDir(dir: FileHandle) {
-        for (sub in dir.list()) {
-            for (file in sub.list().filter { !it.isDirectory }) {
-                load<T>(file.path())
-            }
+    private inline fun <reified T : Any> loadList(list: FileHandle) {
+        for (line in list.readString().lines()) {
+            load<T>(line)
         }
     }
 
-    private inline fun <reified T: Any> load(file: String) = assets.load(file, T::class.java)
+    private inline fun <reified T : Any> load(file: String) = assets.load(file, T::class.java)
 
     /** Continues loading game assets. Returns loading progress as a float with value range 0-1. 1 means loading is finished.
      * @param processingTime How long to process, in milliseconds. */
