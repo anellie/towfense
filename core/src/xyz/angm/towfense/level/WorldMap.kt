@@ -1,6 +1,6 @@
 /*
  * Developed as part of the towfense project.
- * This file was last modified at 7/12/21, 5:18 PM.
+ * This file was last modified at 7/12/21, 6:59 PM.
  * Copyright 2020, see git repository at git.angm.xyz for authors and other info.
  * This file is under the GPL3 license. See LICENSE in the root directory of this repository for details.
  */
@@ -30,15 +30,17 @@ class WorldMap private constructor(val path: Path) : Group() {
     init {
         val straightImage = Assets.tex("map/straight_path")
         val cornerImage = Assets.tex("map/corner")
+        val startImage = Assets.tex("map/start")
         val crossingDrawable = TextureRegionDrawable(TextureRegion(Assets.tex("map/crossing")))
 
         val location = path.start.cpy()
         var delay = 0.02f
-        var last = 0
+        var last = path.segments[0][DIR]
         for (s in path.segments) {
             // todo whomst
+            val actualCornerImage = if (s === path.segments[0]) startImage else cornerImage
             val isLeft = (last < s[DIR] && !(last == 0 && s[DIR] == 3)) || (last == 3 && s[DIR] == 0)
-            plotPoint(cornerImage, location, s[DIR] + if (isLeft) 2 else 1, delay)
+            plotPoint(actualCornerImage, location, s[DIR] + if (isLeft) 2 else 1, delay)
             Direction.add(location, s[DIR], 1)
             for (i in 1..s[LEN]) {
                 if (isOccupied(location)) {
